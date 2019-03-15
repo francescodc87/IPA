@@ -1,0 +1,16 @@
+Package: IPA
+Type: Package
+Title: Integrated Probabilistic Annotation (IPA) method for mass spectrometry data
+Version: 0.1.0
+Author: Francesco Del Carratore <francescodc87@gmail.com>,
+	Simon Rogers <simon.Rogers@glasgow.ac.uk>
+Maintainer: Francesco Del Carratore <francescodc87@gmail.com>
+Description: Rigorous and reproducible method to automatically annotate
+    metabolite profiles and evaluate the resulting confidence of the
+    putative annotations. 
+Depends: R (>= 3.4.4), Matrix, enviPat, stringr
+Imports: stats
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
