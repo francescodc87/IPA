@@ -8,7 +8,7 @@ Maintainer: Francesco Del Carratore <francescodc87@gmail.com>
 Description: Rigorous and reproducible method to automatically annotate
     metabolite profiles and evaluate the resulting confidence of the
     putative annotations. 
-Depends: R (>= 3.4.4), Matrix, enviPat, stringr
+Depends: R (>= 3.4.3), Matrix, enviPat, stringr
 Imports: stats
 License: GPL-3
 Encoding: UTF-8
