@@ -97,7 +97,7 @@
         ind.C <- ind.C[which(!ind.C %in% orphans)]
     }
     pr <- pr[, ind.C]
-    ind.M <- which(apply(pr, 1, sum, na.rm = T) > 0)
+    ind.M <- which(apply(pr[,1:Nc], 1, sum, na.rm = T) > 0)
     pr <- pr[ind.M, ]
     all.formulas = all.formulas1[ind.C, ]
     id.masses = Hits$id.masses[ind.M]
