@@ -72,7 +72,9 @@
     for (k in 1:nrow(pr)) {
         pr[k, ] <- pr[k, ]/sum(pr[k, ])
     }
-    pr[pr < pr.lim] <- 0
+    idx.lim <- which(as.matrix(pr)<pr.lim)
+    pr[idx.lim] <- 0
+    cat("\n", length(idx.lim))
     ind.C <- which(apply(pr, 2, sum, na.rm = T) > 0)
     all.formulas = all.formulas1[ind.C, ]  ### of course it is considering the last column even if there isn't the unknown entry in Hits!!
     if (length(ind.C) < ncol(pr)) {
