@@ -103,7 +103,7 @@
 
     rownames(all.adducts.matrix.hits) <- NULL
     cat("Mapping results... \n")
-    id.masses <- unique(all.adducts.matrix.hits[, 9])
+    id.masses <- as.numeric(unique(all.adducts.matrix.hits[, 9]))
     all.formulas <- unique(all.adducts.matrix.hits[, 1:8], MARGIN = 1)
     hit.matrix <- Matrix(0, nrow = length(id.masses), ncol = nrow(all.formulas))
     for (k in 1:length(id.masses)) {
