@@ -1,7 +1,7 @@
 #' @title Finding putative annotations
 #'
 #' @description
-#' This functions takes find all the putative annotations based
+#' This function finds all the possible annotations given an user-defined ppm window. 
 #'
 #' @param adducts.matrix A matrix contains information about all possible adducts.
 #' Columns are: KEGG.id (e.g. 'C00002'), adduct (e.g. 'M+H'), RT (previously known
@@ -10,10 +10,8 @@
 #' if monoisotopical form, 'iso' otherwise)
 #' @param dataset A matrix containing the measured data, organized in 3 colums: mz, RT and Int
 #' @param ppm.thr A numerical value indicating the maximum accuracy value to be considered
-#' @param RTwin1 A numerical value indicating the maximum difference allowed
-#' between measured RT and previously known retention time for the compound
-#' @param RTwin2 A numerical value indicating the maximum difference allowed
-#' between measured RT of different isotopes (should belower than RTwin1)
+#' @param RTwin A numerical value indicating the maximum difference allowed
+#' between measured RT of different isotopes (should be significantly lower than RTwin1)
 #' @param isotopes A matrix containing infomation about isotopes
 #' @param iso.threshold A numerical value indicating the probability below which
 #' isotope peaks can be omitted
@@ -36,7 +34,7 @@
 #' @importFrom utils combn
 #' @export
 
-"find.hits" <- function(adducts.matrix, dataset, ppm.thr, RTwin1, RTwin2, isotopes, iso.threshold = 1, corr.matrix = NULL, corr.thr = 0.75, relation.id = NULL, v = T, IT = 500) {
+"find.hits" <- function(adducts.matrix, dataset, ppm.thr, RTwin, isotopes, iso.threshold = 1, corr.matrix = NULL, corr.thr = 0.75, relation.id = NULL, v = T, IT = 500) {
     cat("Finding hits... \n")
     all.adducts.matrix.hits <- matrix(NA, 0, 9)
     colnames(all.adducts.matrix.hits) <- c("KEGG.id", "adduct", "RT", "Formula", "theoretical mz", "charge", "mono", "abundance", "mz.id")
@@ -49,45 +47,36 @@
             for (h in 1:length(ind)) {
                 ### for each hit I will compute the isotopes and look for hits!
                 tmp <- t(c(adducts.matrix[ind[h], ], abundance = 100, mz.id = k))
-                if (is.na(adducts.matrix[ind[h], 3])) {
-                  RTdiff1 <- 0
-                } else {
-                  RTdiff1 <- abs(adducts.matrix[ind[h], 3] - RT)
+                isotable <- isopattern(isotopes = isotopes, adducts.matrix[ind[h], 4], charge = as.numeric(adducts.matrix[ind[h], 6]), verbose = FALSE, threshold = iso.threshold)[[1]]
+                isotable <- formula_isopattern(isotable, isotopes)
+                if (nrow(isotable) > 1) {
+                  isotable <- isotable[order(isotable[, 2], decreasing = T), ]
                 }
-                if (RTdiff1 <= RTwin1) {
-                  isotable <- isopattern(isotopes = isotopes, adducts.matrix[ind[h], 4], charge = as.numeric(adducts.matrix[ind[h], 6]), verbose = FALSE, threshold = iso.threshold)[[1]]
-                  isotable <- formula_isopattern(isotable, isotopes)
-                  if (nrow(isotable) > 1) {
-                    isotable <- isotable[order(isotable[, 2], decreasing = T), ]
+                ### find hits
+                flag.iso = TRUE
+                count = 1
+                while (flag.iso & nrow(isotable) > 1 & count < nrow(isotable)) {
+                  count = count + 1
+                  deltaM.iso <- ppm.thr * (isotable[count, 1]) * 1e-06
+                  if (is.null(corr.matrix) & is.null(relation.id)) {
+                    ind.iso <- which(abs(as.numeric(dataset[, 1]) - isotable[count, 1]) <= deltaM.iso & abs(as.numeric(dataset[, 2]) - RT) <= RTwin)
+                  } else if (is.null(relation.id)) {
+                    ind.iso <- which(abs(as.numeric(dataset[, 1]) - isotable[count, 1]) <= deltaM.iso & as.numeric(corr.matrix[k, ]) >= corr.thr)
+                  } else {
+                    ind.iso <- which(abs(as.numeric(dataset[, 1]) - isotable[count, 1]) <= deltaM.iso & relation.id == relation.id[k])
                   }
-                  ### find hits
-                  flag.iso = TRUE
-                  count = 1
-                  while (flag.iso & nrow(isotable) > 1 & count < nrow(isotable)) {
-                    count = count + 1
-                    deltaM.iso <- ppm.thr * (isotable[count, 1]) * 1e-06
-
-                    if (is.null(corr.matrix) & is.null(relation.id)) {
-                      ind.iso <- which(abs(as.numeric(dataset[, 1]) - isotable[count, 1]) <= deltaM.iso & abs(as.numeric(dataset[, 2]) - RT) <= RTwin2)
-                    } else if (is.null(relation.id)) {
-                      ind.iso <- which(abs(as.numeric(dataset[, 1]) - isotable[count, 1]) <= deltaM.iso & as.numeric(corr.matrix[k, ]) >= corr.thr)
-                    } else {
-                      ind.iso <- which(abs(as.numeric(dataset[, 1]) - isotable[count, 1]) <= deltaM.iso & relation.id == relation.id[k])
+                  if (length(ind.iso) == 0) {
+                    flag.iso <- FALSE
+                  } else {
+                    for (i in 1:length(ind.iso)) {
+                      tmp.iso <- c(adducts.matrix[ind[h], 1:3], rownames(isotable)[count], isotable[count, 1], adducts.matrix[ind[h], 6], "iso", isotable[count, 2], mz.id = ind.iso[i])
+                      tmp <- rbind(tmp, tmp.iso)
                     }
 
-                    if (length(ind.iso) == 0) {
-                      flag.iso <- FALSE
-                    } else {
-                      for (i in 1:length(ind.iso)) {
-                        tmp.iso <- c(adducts.matrix[ind[h], 1:3], rownames(isotable)[count], isotable[count, 1], adducts.matrix[ind[h], 6], "iso", isotable[count, 2], mz.id = ind.iso[i])
-                        tmp <- rbind(tmp, tmp.iso)
-                      }
 
-
-                    }
                   }
                 }
-                all.adducts.matrix.hits <- rbind(all.adducts.matrix.hits, tmp)
+              all.adducts.matrix.hits <- rbind(all.adducts.matrix.hits, tmp)
             }
 
 

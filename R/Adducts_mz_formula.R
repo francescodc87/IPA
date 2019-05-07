@@ -20,7 +20,7 @@
         }
     }
     if (flag) {
-        mz <- check_chemform(isotopes, form)[1, 3]/abs(adducts[ind, 3])
+        mz <- isopattern(isotopes,form,charge=as.numeric(adducts[ind, 3]),threshold =99,verbose = F)[[1]][1,1]
         out <- c(form, mz, as.numeric(adducts[ind, 3]))
         names(out) <- c("formula", "m/z", "charge")
     } else {

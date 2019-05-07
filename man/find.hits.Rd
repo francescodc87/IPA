@@ -4,7 +4,7 @@
 \alias{find.hits}
 \title{Finding putative annotations}
 \usage{
-find.hits(adducts.matrix, dataset, ppm.thr, RTwin1, RTwin2, isotopes,
+find.hits(adducts.matrix, dataset, ppm.thr, RTwin, isotopes,
   iso.threshold = 1, corr.matrix = NULL, corr.thr = 0.75,
   relation.id = NULL, v = T, IT = 500)
 }
@@ -19,11 +19,8 @@ if monoisotopical form, 'iso' otherwise)}
 
 \item{ppm.thr}{A numerical value indicating the maximum accuracy value to be considered}
 
-\item{RTwin1}{A numerical value indicating the maximum difference allowed
-between measured RT and previously known retention time for the compound}
-
-\item{RTwin2}{A numerical value indicating the maximum difference allowed
-between measured RT of different isotopes (should belower than RTwin1)}
+\item{RTwin}{A numerical value indicating the maximum difference allowed
+between measured RT of different isotopes (should be significantly lower than RTwin1)}
 
 \item{isotopes}{A matrix containing infomation about isotopes}
 
@@ -45,7 +42,7 @@ A list containing the matrix of the posterior probabilities, the id.masses vecto
 the allsampcomp matrix containing all the assignments for each iteration of the Gibbs sampler
 }
 \description{
-This functions takes find all the putative annotations based
+This function finds all the possible annotations given an user-defined ppm window.
 }
 \seealso{
 find.Hits IPAposteriors

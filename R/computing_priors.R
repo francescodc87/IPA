@@ -10,6 +10,7 @@
 #' @param pk A vector of length nrow(Hits$all.formulas). Values between 0 and 1 expressing initial confidence of the presence of each formula
 #' @param ppm A number indicating the instrument accuracy to be considered
 #' @param unknown.ppm The ppm number to be assigned to unknown (default NA - No unknown is considered)
+#' @param RT.pen A numerical value indicating the multiplicative factor used when the measured retention time is outside of the range reported in the database
 #' @param v A logical value indicating if the progress will be shown (default TRUE)
 #' @param IT A number inticating after how many iteration an update should be shown (default 120)
 #' @param pr.lim A number inidicating the lowest probability value allowed (default 1e-05)
@@ -28,7 +29,7 @@
 
 
 ### the funtion needs enviPat
-"compute.Priors" <- function(Hits, dataset, pk = rep(1, nrow(Hits$all.formulas)), ppm, unknown.ppm = NA, v = T, IT = 120, pr.lim = 1e-05) {
+"compute.Priors" <- function(Hits, dataset, pk = rep(1, nrow(Hits$all.formulas)), ppm, unknown.ppm = NA, RT.pen=0.5, v = T, IT = 120, pr.lim = 1e-05) {
     cat("Computing Priors... \n")
     # defing the number of masses and the number of the compounds
     compounds.mass <- as.numeric(Hits$all.formulas[, 5])
@@ -42,10 +43,20 @@
     rm(sigma, deltaMs)
     # evaluation of prior probabilities (likelihood based only on mass) initialize some variables
 
+    #### here I create una matrix of the same dimension of pr (MxC) to multiply to pr
+    pr.RT <- matrix(1,M,length(pk))
+    idxRTs <- which(!is.na(Hits$all.formulas[,3]))
+    pr.RT[,idxRTs] <- RT.pen
+    for(k in idxRTs){
+      RTrange <- as.numeric(unlist(strsplit(Hits$all.formulas[k,3], split=";")))
+      idxM <- which(dataset[Hits$id.masses,2]>=RTrange[1] & dataset[Hits$id.masses,2]<=RTrange[2])
+      pr.RT[idxM,k] <- 1
+    }
+
     if (!is.na(unknown.ppm)) {
         pr <- Matrix(0, M, (Nc + 1))
         for (k in 1:M) {
-            pr[k, 1:Nc] <- ((exp((-0.5 * precision[k]) * ((compounds.mass - mass[k])^2))) * pk)
+            pr[k, 1:Nc] <- ((exp((-0.5 * precision[k]) * ((compounds.mass - mass[k])^2))) * pk * pr.RT[k,])
             delta.unknown <- unknown.ppm * mass[k] * 1e-06
             pr[k, Nc + 1] <- ((exp((-0.5 * precision[k]) * ((delta.unknown)^2))))
             if (v) {
@@ -59,7 +70,7 @@
     } else {
         pr <- Matrix(0, M, Nc)
         for (k in 1:M) {
-            pr[k, 1:Nc] <- ((exp((-0.5 * precision[k]) * ((compounds.mass - mass[k])^2))) * pk)
+            pr[k, 1:Nc] <- ((exp((-0.5 * precision[k]) * ((compounds.mass - mass[k])^2))) * pk * pr.RT[k,])
             if (v) {
                 if (k%%IT == 0) {
                   # Print on the screen some message
@@ -69,6 +80,8 @@
         }
         all.formulas1 = Hits$all.formulas
     }
+
+
     for (k in 1:nrow(pr)) {
         pr[k, ] <- pr[k, ]/sum(pr[k, ])
     }

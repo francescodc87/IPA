@@ -4,12 +4,12 @@
 #' This function updates the database according to new information
 #'
 #' @param DB The database used in a dataframe format. It has to be organized in the same fashion of the one included with the package
-#' @param all.adducts.matrix.POS A matrix contains information about all possible adducts.
+#' @param all_adducts_matrix_POS A matrix contains information about all possible adducts.
 #' Columns are: KEGG.id (e.g. 'C00002'), adduct (e.g. 'M+H'), RT (previously known
 #' retention time for the compound, NA if unknown), formula (e.g. C10H17N5O13P3),
 #' theoretical mz (e.g. 508.003570124), charge (e.g. 1) mono ('mono'
 #' if monoisotopical form, 'iso' otherwise)
-#' @param all.adducts.matrix.NEG A matrix contains information about all possible adducts.
+#' @param all_adducts_matrix_NEG A matrix contains information about all possible adducts.
 #' Columns are: KEGG.id (e.g. 'C00002'), adduct (e.g. 'M-H'), RT (previously known
 #' retention time for the compound, NA if unknown), formula (e.g. C10H17N5O13P3),
 #' theoretical mz (e.g. 508.003570124), charge (e.g. -1) mono ('mono'
@@ -29,7 +29,7 @@
 #' @importFrom utils combn
 #' @export
 
-"update_database" <- function(DB, all.adducts.matrix.POS, all.adducts.matrix.NEG, update, adducts, isotopes) {
+"update_database" <- function(DB, all_adducts_matrix_POS, all_adducts_matrix_NEG, update, adducts, isotopes) {
     for (k in 1:nrow(update)) {
         ind <- which(DB[, 1] == update[k, 1])
         if (length(ind) == 0) {
@@ -48,7 +48,7 @@
             for (add in tmp.adds) {
                 out <- Adducts.mz.formula(tmp.formula, add, adducts, isotopes)
                 if (!is.null(out)) {
-                  all.adducts.matrix.POS <- rbind(all.adducts.matrix.POS, c(as.vector(tmp["KEGG.id"]), add, as.vector(tmp["RT"]), out, "mono"))
+                  all_adducts_matrix_POS <- rbind(all_adducts_matrix_POS, c(as.vector(tmp["KEGG.id"]), add, as.vector(tmp["RT"]), out, "mono"))
                 }
             }
             ## NEG
@@ -56,7 +56,7 @@
             for (add in tmp.adds) {
                 out <- Adducts.mz.formula(tmp.formula, add, adducts, isotopes)
                 if (!is.null(out)) {
-                  all.adducts.matrix.NEG <- rbind(all.adducts.matrix.NEG, c(as.vector(tmp["KEGG.id"]), add, as.vector(tmp["RT"]), out, "mono"))
+                  all_adducts_matrix_NEG <- rbind(all_adducts_matrix_NEG, c(as.vector(tmp["KEGG.id"]), add, as.vector(tmp["RT"]), out, "mono"))
                 }
             }
 
@@ -64,34 +64,46 @@
             for (field in colnames(update)) {
                 DB[ind, field] <- update[k, field]
             }
-            ### remove old adducts
-            ind.tmp <- which(all.adducts.matrix.POS[, 1] != update[k, 1])
-            all.adducts.matrix.POS <- all.adducts.matrix.POS[ind.tmp, ]
-            ind.tmp <- which(all.adducts.matrix.NEG[, 1] != update[k, 1])
-            all.adducts.matrix.NEG <- all.adducts.matrix.NEG[ind.tmp, ]
+
             ### compute adducts
             tmp.formula <- as.vector(update[k, "Formula"])
             ## POS
             tmp.adds <- unlist(strsplit(update[k, "POS.adducts"], split = ";"))
+            out.pos <-NULL
             for (add in tmp.adds) {
                 out <- Adducts.mz.formula(tmp.formula, add, adducts, isotopes)
                 if (!is.null(out)) {
-                  all.adducts.matrix.POS <- rbind(all.adducts.matrix.POS, c(as.vector(update[k, "KEGG.id"]), add, as.vector(update[k, "RT"]), out, "mono"))
+                  out.pos <- rbind(out.pos, c(as.vector(update[k, "KEGG.id"]), add, as.vector(update[k, "RT"]), out, "mono"))
                 }
             }
             ## NEG
             tmp.adds <- unlist(strsplit(update[k, "NEG.adducts"], split = ";"))
+            out.neg <- NULL
             for (add in tmp.adds) {
-                out <- Adducts.mz.formula(tmp.formula, add, adducts, isotopes)
+                out <- Adducts.mz.formula(form = tmp.formula, add, adducts, isotopes)
                 if (!is.null(out)) {
-                  all.adducts.matrix.NEG <- rbind(all.adducts.matrix.NEG, c(as.vector(update[k, "KEGG.id"]), as.vector(update[k, "RT"]), add, out, "mono"))
+                  out.neg <- rbind(out.neg, c(as.vector(update[k, "KEGG.id"]), as.vector(update[k, "RT"]), add, out, "mono"))
                 }
+            }
+
+            ### remove old adducts
+            ind.tmp <- which(all_adducts_matrix_POS[, 1] == update[k, 1])
+            if(ind.tmp[length(ind.tmp)]<nrow(all_adducts_matrix_POS)){
+              all_adducts_matrix_POS <- rbind(all_adducts_matrix_POS[1:(ind.tmp[1]-1), ],out.pos,all_adducts_matrix_POS[(ind.tmp[length(ind.tmp)]+1):nrow(all_adducts_matrix_POS), ])
+            }else{
+              all_adducts_matrix_POS <- rbind(all_adducts_matrix_POS[1:(ind.tmp[1]-1), ],out.pos)
+            }
+            ind.tmp <- which(all_adducts_matrix_NEG[, 1] == update[k, 1])
+            if(ind.tmp[length(ind.tmp)]<nrow(all_adducts_matrix_NEG)){
+              all_adducts_matrix_NEG <- rbind(all_adducts_matrix_NEG[1:(ind.tmp[1]-1), ],out.neg,all_adducts_matrix_NEG[(ind.tmp[length(ind.tmp)]+1):nrow(all_adducts_matrix_NEG), ])
+            }else{
+              all_adducts_matrix_NEG <- rbind(all_adducts_matrix_NEG[1:(ind.tmp[1]-1), ],out.neg)
             }
 
         }
     }
 
-    out <- list(DB = DB, all.adducts.matrix.POS = all.adducts.matrix.POS, all.adducts.matrix.NEG = all.adducts.matrix.NEG)
+    out <- list(DB = DB, all_adducts_matrix_POS = all_adducts_matrix_POS, all_adducts_matrix_NEG = all_adducts_matrix_NEG)
     return(out)
 
 }

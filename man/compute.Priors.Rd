@@ -5,7 +5,8 @@
 \title{Computing prior probabilities associated with putative annotations}
 \usage{
 compute.Priors(Hits, dataset, pk = rep(1, nrow(Hits$all.formulas)), ppm,
-  unknown.ppm = NA, v = T, IT = 120, pr.lim = 1e-05)
+  unknown.ppm = NA, RT.pen = 0.5, v = T, IT = 120,
+  pr.lim = 1e-05)
 }
 \arguments{
 \item{Hits}{The output of find.hits() function}
@@ -17,6 +18,8 @@ compute.Priors(Hits, dataset, pk = rep(1, nrow(Hits$all.formulas)), ppm,
 \item{ppm}{A number indicating the instrument accuracy to be considered}
 
 \item{unknown.ppm}{The ppm number to be assigned to unknown (default NA - No unknown is considered)}
+
+\item{RT.pen}{A numerical value indicating the multiplicative factor used when the measured retention time is outside of the range reported in the database}
 
 \item{v}{A logical value indicating if the progress will be shown (default TRUE)}
 

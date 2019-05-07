@@ -4,19 +4,19 @@
 \alias{update_database}
 \title{Function used to update your database}
 \usage{
-update_database(DB, all.adducts.matrix.POS, all.adducts.matrix.NEG, update,
+update_database(DB, all_adducts_matrix_POS, all_adducts_matrix_NEG, update,
   adducts, isotopes)
 }
 \arguments{
 \item{DB}{The database used in a dataframe format. It has to be organized in the same fashion of the one included with the package}
 
-\item{all.adducts.matrix.POS}{A matrix contains information about all possible adducts.
+\item{all_adducts_matrix_POS}{A matrix contains information about all possible adducts.
 Columns are: KEGG.id (e.g. 'C00002'), adduct (e.g. 'M+H'), RT (previously known
 retention time for the compound, NA if unknown), formula (e.g. C10H17N5O13P3),
 theoretical mz (e.g. 508.003570124), charge (e.g. 1) mono ('mono'
 if monoisotopical form, 'iso' otherwise)}
 
-\item{all.adducts.matrix.NEG}{A matrix contains information about all possible adducts.
+\item{all_adducts_matrix_NEG}{A matrix contains information about all possible adducts.
 Columns are: KEGG.id (e.g. 'C00002'), adduct (e.g. 'M-H'), RT (previously known
 retention time for the compound, NA if unknown), formula (e.g. C10H17N5O13P3),
 theoretical mz (e.g. 508.003570124), charge (e.g. -1) mono ('mono'
