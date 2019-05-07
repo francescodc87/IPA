@@ -49,7 +49,7 @@
       }else{
         nomi <- c(nomi, DB[idx,"Name"])
       }
-      delta <- dataset[as.numeric(Prior$id.masses[k]),1]-as.numeric(out[j,4])
+      delta <- as.numeric(dataset[as.numeric(Prior$id.masses[k]),1])-as.numeric(out[j,4])
       ppms <- c(ppms, round((delta/as.numeric(out[j,4]))*1e6,4))
     }
 
