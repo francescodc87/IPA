@@ -31,10 +31,20 @@ install_github("francescodc87/IPA")
 
 
 
-## Case study - I can use a case study here, maybe the synthetic experiment
+## Case study - Synthetic experiment
 
-Here I have to use a clear example of how to use the software, showing how to use the software.
-I should be carefull with what I share here before pubblication
+In order to show the functionalities of the IPA package we generated a syntheitc experiment.
+This synthetic experiment contains 15 compounds involved in the mevalonate pathway and limonene synthesis.
+Considering a positive ionisation, several adducts were simulated for each of the considered metabolites (M+H, M+Na,
+M+2H and 2M+H for positive mode). Additionally, all the possible isotopes with a predicted relative abundance
+higher than 5% were included in the dataset. A realistic experimental outcome was simulated by adding Gaussian noise to the m/z values, where appropriate the standard deviation was computed for each mass assuming an instrument accuracy of 10 ppm. For each detected mass, the measured intensities were chosen in order to be coherent with the theoretical abundance of the isotopes, and the same RT value (+-2 seconds) was assigned to all the simulated masses related to the same compound. After loading the package, the synthetic experiment just described can be imported in the R environment using the following commands:
+```
+library(IPA)
+install_github("francescodc87/IPA")
+```
+
+
+
 
 ## Built With
 
