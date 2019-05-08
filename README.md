@@ -102,7 +102,7 @@ PostISOADDBIO <- IPAposteriors(P=Prior,Iso = ISO, Add = ADD, Bio = BIO1,
 ```
 
 It might be necessary to organize the results in a more readable fashion.
-This can be obtained with the .... function:
+This can be obtained with the ParseIPAresults() function:
 
 ```
 Final.res <- ParseIPAresults(Post, Prior,dataset =df.POS, DB = DB, IDs=IDs)
