@@ -5,7 +5,8 @@
 \title{Building Biotransformations connectivity matrix}
 \usage{
 build.bio.connectivity.matrix(Prior, DB, ionisation,
-  connection.type = "reactions", v = TRUE, IT = 500)
+  connection.type = "reactions", connections = NULL, v = TRUE,
+  IT = 500)
 }
 \arguments{
 \item{Prior}{The output of compute.Priors() function}
@@ -14,7 +15,9 @@ build.bio.connectivity.matrix(Prior, DB, ionisation,
 
 \item{ionisation}{A character indicating the ionisation mode of the experiment, either 'positive' or 'negative'}
 
-\item{connection.type}{NOT USED YET!}
+\item{connection.type}{if equal to "reactions" (default) considers the reactions reported in the database. If it is equal to "formulas", the function consider the list of possible reactions reported in connections}
+
+\item{connections}{if connection.type=="fomulas", this vector contains a list of formulas that are likely to be added or substracted by an enzymatic reaction. If it is equal to NULL the default list of formulas is used}
 
 \item{v}{A logical value indicating if the progress will be shown (default TRUE)}
 

@@ -59,7 +59,7 @@ The first step consist in finding all the possible hits in the database. This is
 ```
 Hits <- find.hits(adducts.matrix= all_adducts_POS,
                   dataset=df.POS, ppm.thr= 5*ppm,
-                  RTwin1=60,relation.id = relation.id,
+                  RTwin=60,relation.id = relation.id,
                   isotopes=isotopes, 
                   iso.threshold=1)
 
