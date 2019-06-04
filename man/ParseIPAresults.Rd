@@ -23,7 +23,7 @@ ParseIPAresults(Post, Prior, dataset, DB, IDs = NULL, v = TRUE,
 \item{IT}{A number inticating after how many iteration an update should be shown (default 120)}
 }
 \value{
-A list containing...NOT SURE YET
+A list containing the parsed results
 }
 \description{
 This functions takes as input the output of the IPAposteriors() function and parses

@@ -12,7 +12,7 @@
 #' @param v A logical value indicating if the progress will be shown (default TRUE)
 #' @param IT A number inticating after how many iteration an update should be shown (default 120)
 #'
-#' @return A list containing...NOT SURE YET
+#' @return A list containing the parsed results
 #'
 #' @author Francesco Del Carratore \email{francescodc87@@gmail.com}
 #'
