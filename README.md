@@ -58,8 +58,8 @@ The first step consist in finding all the possible hits in the database. This is
 
 ```
 Hits <- find.hits(adducts.matrix= all_adducts_POS,
-                  dataset=df.POS, ppm.thr= 5*ppm,
-                  RTwin=60,relation.id = relation.id,
+                  dataset=SyntheticExperiment$df.POS, ppm.thr= 5*ppm,
+                  RTwin=60,relation.id = SyntheticExperiment$relation.id,
                   isotopes=isotopes, 
                   iso.threshold=1)
 
@@ -69,7 +69,7 @@ The output of this function can be used as input of the compute.Priors() functio
 in order to evaluate the prior probabilities:
 
 ```
-Prior <- compute.Priors(Hits=Hits, dataset=df.POS,
+Prior <- compute.Priors(Hits=Hits, dataset=SyntheticExperiment$df.POS,
                         pk=rep(1,nrow(Hits$all.formulas)),
                         ppm=ppm,unknown.ppm = 3*ppm, pr.lim = 1e-15)
 
@@ -94,10 +94,10 @@ Finally, it is possible to compute the posterior probabilities using the IPApost
 
 ```
 PostISOADDBIO <- IPAposteriors(P=Prior,Iso = ISO, Add = ADD, Bio = BIO1,
-                               Int = as.numeric(df.POS[,3]), ratio.toll = 0.8,
+                               Int = as.numeric(SyntheticExperiment$df.POS[,3]), ratio.toll = 0.8,
                                delta.iso = .1, delta.add = .1, delta.bio = 1,
                                allsamp = T, no.its = 5000, burn = 1000,
-                               rel.id = relation.id)
+                               rel.id = SyntheticExperiment$relation.id)
 
 ```
 
@@ -105,7 +105,7 @@ It might be necessary to organize the results in a more readable fashion.
 This can be obtained with the ParseIPAresults() function:
 
 ```
-Final.res <- ParseIPAresults(Post, Prior,dataset =df.POS, DB = DB, IDs=IDs)
+Final.res <- ParseIPAresults(Post, Prior,dataset =SyntheticExperiment$df.POS, DB = DB, IDs=SyntheticExperiment$IDs)
 ```
 
 This creates a list with the same length of the number of feature considered. Each element contains a summary of the results for the considered features.

@@ -1,9 +1,9 @@
-#' @title Database
+#' @title SyntheticExperiment
 #'
 #' @description Dataset with the 83 simulated positive features
 #'
 #'
-#' @docType SyntheticExperiment
+#' @docType data
 #' @keywords datasets
 #' @name SyntheticExperiment
 #' @usage data(SyntheticExperiment)
