@@ -89,11 +89,12 @@
     pr[idx.lim] <- 0
     ind.C <- which(apply(pr, 2, sum, na.rm = T) > 0)
     all.formulas = all.formulas1[ind.C, ]  ### of course it is considering the last column even if there isn't the unknown entry in Hits!!
+    orphans <- NULL
     if (length(ind.C) < ncol(pr)) {
         ## I have to check for orphans isotopes
         cat("Checking for orphan isotopes... \n")
         IDs <- unique(all.formulas[, 1:2])
-        orphans <- NULL
+        
         for (k in 1:nrow(IDs)) {
             ind <- which(all.formulas[, 1] == IDs[k, 1] & all.formulas[, 7] == "mono" & all.formulas[, 2] == IDs[k, 2])
             if (length(ind) == 0) {
