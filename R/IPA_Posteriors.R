@@ -56,7 +56,24 @@
         cat("\n Insert intensities to use Isotopes connections")
         stop()
     }
+    
+    if(!is.null(Int)){
+     Int <- Int[P$id.masses]
+    }
+    
+    if(!is.null(RT)){
+      RT <- RT[P$id.masses]
+    }
+    
+    if(!is.null(rel.id)){
+      rel.id <- rel.id[P$id.masses]
+    }
 
+    if(!is.null(Corr.matrix)){
+      Corr.matrix <- Corr.matrix[P$id.masses,P$id.masses]
+    }
+  
+  
     ### ONLY BIO - - - IGNORING ALL POSSIBLE FILTERS
     if (is.null(Add) & is.null(Iso) & !is.null(Bio)) {
         cat("\n Computing Posterior probabilities based on Biotransformations only")
@@ -74,6 +91,7 @@
 
         } else if (!is.null(Corr.matrix)) {
             cat("\n Considering correlation matrix \n")
+            
             out <- IPA.sampler.One_Non_Binary_Matrix_CorrMat(P = P$Priors, Iso = Iso, Int = Int, Corr.matrix = Corr.matrix, corr.thr = corr.thr, ratio.toll = ratio.toll,
                 no.its = no.its, burn = burn, delta = delta.iso, allsamp = allsamp, allsampcomp = allsampcomp, v = v, IT = IT)
 
