@@ -92,7 +92,7 @@
       }
       reduced.DB<- reduced.DB[ordine,]
 
-      cat("Finding biochemical connectionsbased on formulas... \n")
+      cat("Finding biochemical connections based on formulas... \n")
       if(is.null(connections)){
         connections <- c("C3H5NO", "C6H12N4O", "C4H6N2O2", "C4H5NO3", "C3H5NOS", "C6H10N2O3S2", "C5H7NO3",
                          "C5H8N2O2","C2H3NO","C6H7N3O","C6H11NO","C6H11NO","C6H12N2O","C5H9NOS","C9H9NO",
@@ -110,7 +110,9 @@
       connections.mw <- connections[,3]
       for(cc in 1:length(ind.mains)){
         tmp <- cbind(subform(reduced.DB[,4], reduced.DB[cc,4]),check_ded(reduced.DB[,4], reduced.DB[cc,4]))
-        tmp <- cbind(tmp, check_chemform(isotopes = isotopes, chemforms = tmp[,1])[,3])
+        mw.diff <- rep(NA,nrow(tmp))
+        mw.diff[which(tmp[,2]==FALSE)] <- check_chemform(isotopes = isotopes, chemforms = tmp[which(tmp[,2]==FALSE),1])[,3]
+        tmp <- cbind(tmp, mw.diff)
         idx.sub <- which(tmp[,2]==FALSE & tmp[,1]!="NANA" & tmp[,3]%in%connections.mw)
         ccc <- ind.mains[cc]
         idx.sub <- ind.mains[idx.sub]
