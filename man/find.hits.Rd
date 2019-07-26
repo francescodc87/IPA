@@ -20,7 +20,7 @@ if monoisotopical form, 'iso' otherwise)}
 \item{ppm.thr}{A numerical value indicating the maximum accuracy value to be considered}
 
 \item{RTwin}{A numerical value indicating the maximum difference allowed
-between measured RT of different isotopes (should be significantly lower than RTwin1)}
+between measured RT of different isotopes}
 
 \item{isotopes}{A matrix containing infomation about isotopes}
 

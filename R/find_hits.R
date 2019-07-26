@@ -1,7 +1,7 @@
 #' @title Finding putative annotations
 #'
 #' @description
-#' This function finds all the possible annotations given an user-defined ppm window. 
+#' This function finds all the possible annotations given an user-defined ppm window.
 #'
 #' @param adducts.matrix A matrix contains information about all possible adducts.
 #' Columns are: KEGG.id (e.g. 'C00002'), adduct (e.g. 'M+H'), RT (previously known
@@ -11,7 +11,7 @@
 #' @param dataset A matrix containing the measured data, organized in 3 colums: mz, RT and Int
 #' @param ppm.thr A numerical value indicating the maximum accuracy value to be considered
 #' @param RTwin A numerical value indicating the maximum difference allowed
-#' between measured RT of different isotopes (should be significantly lower than RTwin1)
+#' between measured RT of different isotopes
 #' @param isotopes A matrix containing infomation about isotopes
 #' @param iso.threshold A numerical value indicating the probability below which
 #' isotope peaks can be omitted
