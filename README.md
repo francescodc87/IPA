@@ -93,7 +93,7 @@ BIO1 <- build.bio.connectivity.matrix(Prior=Prior, DB=DB,
 Finally, it is possible to compute the posterior probabilities using the IPAposteriors() function.
 
 ```
-PostISOADDBIO <- IPAposteriors(P=Prior,Iso = ISO, Add = ADD, Bio = BIO1,
+Post <- IPAposteriors(P=Prior,Iso = ISO, Add = ADD, Bio = BIO1,
                                Int = as.numeric(SyntheticExperiment$df.POS[,3]), ratio.toll = 0.8,
                                delta.iso = .1, delta.add = .1, delta.bio = 1,
                                allsamp = T, no.its = 5000, burn = 1000,
@@ -109,6 +109,23 @@ Final.res <- ParseIPAresults(Post, Prior,dataset =SyntheticExperiment$df.POS, DB
 ```
 
 This creates a list with the same length of the number of feature considered. Each element contains a summary of the results for the considered features.
+
+The whole analysis can be also run with a single wrapper called simpleIPA
+
+```
+Results <- simpleIPA(dataset=SyntheticExperiment$df.POS,
+                     adducts.matrix=all_adducts_POS, DB=DB,
+                     ionisation=ionisation, ppm=ppm, ppm.thr=5*ppm,
+                     RTwin=60,isotopes=isotopes, iso.threshold=1,
+                     relation.id=SyntheticExperiment$relation.id,
+                     delta.bio = 1, delta.add = .1, delta.iso = .1,
+                     allsamp = TRUE, no.its = 5000, burn = 1000,
+                     IDs=SyntheticExperiment$IDs,
+                     unknown.ppm = 3*ppm, pr.lim = 1e-15,
+                     fully.connected = FALSE, ratios = TRUE,
+                     connection.type = "reactions",
+                     v = T, IT = 500)
+```
 
 ## Built With
 
