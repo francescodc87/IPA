@@ -65,8 +65,6 @@
             tmp.reacts <- which(all.reactions %in% reactions.list[[ind]])
             React.map[k, tmp.reacts] <- 1
         }  
-        tmp.reacts <- which(all.reactions %in% reactions.list[[ind]])
-        React.map[k, tmp.reacts] <- 1
       }
 
       for (k in 1:ncol(React.map)) {
