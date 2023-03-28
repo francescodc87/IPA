@@ -61,6 +61,10 @@
       React.map <- matrix(0, length(ind.mains), length(all.reactions))
       for (k in 1:length(ind.mains)) {
         ind <- which(reduced.DB[, 1] == Prior$all.formulas[ind.mains[k], 1])
+        if(length(ind)>0){
+            tmp.reacts <- which(all.reactions %in% reactions.list[[ind]])
+            React.map[k, tmp.reacts] <- 1
+        }  
         tmp.reacts <- which(all.reactions %in% reactions.list[[ind]])
         React.map[k, tmp.reacts] <- 1
       }
