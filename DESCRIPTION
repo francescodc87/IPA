@@ -1,7 +1,7 @@
 Package: IPA
 Type: Package
 Title: Integrated Probabilistic Annotation (IPA) method for mass spectrometry data
-Version: 1.0.0
+Version: 1.0.1
 Author: Francesco Del Carratore <francescodc87@gmail.com>,
 	Simon Rogers <simon.Rogers@glasgow.ac.uk>
 Maintainer: Francesco Del Carratore <francescodc87@gmail.com>
